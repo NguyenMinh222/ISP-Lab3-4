@@ -3,4 +3,8 @@ from django.http import HttpResponse
 
 
 def index(request):
-    return HttpResponse("<h4>Hello, everyone, it is my first Django project</h4>")
+   return render(request, 'main/index.html')
+
+
+def about(request):
+    return render(request, 'main/about.html')

@@ -9,8 +9,8 @@ class Task(models.Model):
         return self.nameofdishes
 
     class Meta:
-        verbose_name = 'Задача'
-        verbose_name_plural = 'Задачи'
+        verbose_name = 'Блюдо'
+        verbose_name_plural = 'Блюда'
 
 
 

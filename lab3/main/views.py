@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Task
-from .forms import TaskForm
+from .forms import TaskForm, CreateUserForm
+from django.contrib.auth.forms import UserCreationForm
 
 
 def index(request):
@@ -28,3 +29,21 @@ def create(request):
         'error': error
     }
     return render(request, 'main/create.html', context)
+
+
+def register(request):
+
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = CreateUserForm()
+
+    contex = {'form': form}
+    return render(request, 'main/register_page.html', contex)
+
+
+def login(request):
+    contex = {}
+    return render(request, 'main/login_page.html', contex)

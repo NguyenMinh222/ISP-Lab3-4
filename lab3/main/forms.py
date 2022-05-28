@@ -1,5 +1,8 @@
 from .models import Task
 from django.forms import ModelForm, TextInput, Textarea
+from django.contrib.auth.forms import UserCreationForm
+from django import forms
+from django.contrib.auth.models import User
 
 
 class TaskForm(ModelForm):
@@ -15,3 +18,9 @@ class TaskForm(ModelForm):
                 'placeholder': 'Введите описание'
             }),
         }
+
+
+class CreateUserForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ["username", "email", "password1", "password2"]

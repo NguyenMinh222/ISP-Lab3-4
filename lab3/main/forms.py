@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 class TaskForm(ModelForm):
     class Meta:# в этом классе указываем дополнительные настройки
         model = Task #показываем с какой моделью мы работаем
-        fields = ["nameofdishes", "task"]#указываем какие поля должны присутствовать в самой формочке
+        fields = ["nameofdishes", "task", "picture"]#указываем какие поля должны присутствовать в самой формочке
         widgets = {"nameofdishes": TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Введите название блюда'
@@ -17,6 +17,7 @@ class TaskForm(ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Введите описание'
             }),
+
         }
 
 

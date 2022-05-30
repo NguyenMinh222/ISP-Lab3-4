@@ -1,0 +1,13 @@
+{% extends 'main/base.html' %}
+{% block title %}
+Удаление
+{% endblock %}
+
+<% block content%>
+<p>Уверены, что хотите удалить!</p>
+<form action="{% url 'delete' form.id %}" method="POST">
+    {% csrf_token %}
+    <a href="{% url 'menu_page' %}">CANCEL</a>
+    <input type="submit" name="Confirm">
+</form>
+<% endblock %>

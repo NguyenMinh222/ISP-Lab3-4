@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import Task
-from .forms import TaskForm, CreateUserForm
+from .models import *
+from .forms import DishesForm, CreateUserForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+
 
 
 @login_required(login_url='login_page')
@@ -20,19 +21,49 @@ def about(request):
 def create(request):
     error = ''
     if request.method == 'POST':
-        form = TaskForm(request.POST)
+        form = DishesForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('menu_page')
         else:
             error = 'Форма была неверной'
 
-    form = TaskForm()
+    form = DishesForm()
     context = {
         'form': form,
         'error': error
     }
     return render(request, 'main/create.html', context)
+
+
+def update(request, pk):
+    dish = Dishes.objects.get(id=pk)
+    form = DishesForm(instance=dish)
+
+    if request.method == 'POST':
+        form = DishesForm(request.POST, instance=dish)
+        if form.is_valid():
+            form.save()
+            return redirect('menu_page')
+        else:
+            error = 'Форма была неверной'
+
+    context = {
+        'form': form
+    }
+    return render(request, 'main/change_dish.html', context)
+
+
+def delete(request, pk):
+    dish = Dishes.objects.get(id=pk)
+    if request.method == 'POST':
+        dish.delete()
+        return redirect('menu_page')
+
+    context = {
+        'form': dish
+    }
+    return render(request, 'main/menu_page.html', context)
 
 
 def register(request):
@@ -85,5 +116,5 @@ def popup(request):
 
 
 def menu(request):
-    tasks = Task.objects.order_by('-id')  # получаем все оъекты из класса
-    return render(request, 'main/menu_page.html', {'tasks': tasks})
+    dishes = Dishes.objects.order_by('-id')  # получаем все оъекты из класса
+    return render(request, 'main/menu_page.html', {'dishes': dishes})

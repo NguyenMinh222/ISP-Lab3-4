@@ -1,4 +1,4 @@
-from .models import Dishes
+from .models import *
 from django.forms import ModelForm, TextInput, Textarea
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class DishesForm(ModelForm):
     class Meta:# в этом классе указываем дополнительные настройки
         model = Dishes #показываем с какой моделью мы работаем
-        fields = '__all__'#указываем какие поля должны присутствовать в самой формочке
+        fields = ['nameofdishes', 'description', 'howTOcook', 'category_id']#указываем какие поля должны присутствовать в самой формочке
         widgets = {"nameofdishes": TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Введите название блюда'

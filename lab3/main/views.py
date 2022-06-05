@@ -1,10 +1,21 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .models import *
 from .forms import DishesForm, CreateUserForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+import logging
+import asyncio
+from asgiref.sync import sync_to_async
 
+
+logger = logging.getLogger('main')
+
+
+def home(request):
+    logger.info("Good work")
+    return render(request, 'main/home_page2.html', {'title': 'О готовке'})
 
 
 @login_required(login_url='login_page')
@@ -24,9 +35,11 @@ def create(request):
         form = DishesForm(request.POST)
         if form.is_valid():
             form.save()
+            logger.info("Dishes was created successfully!")
             return redirect('menu_page')
         else:
-            error = 'Форма была неверной'
+            logger.error("The form is filled out incorrectly")
+            error = 'Форма заполнения была неверной'
 
     form = DishesForm()
     context = {
@@ -52,6 +65,12 @@ def update(request, pk):
         'form': form
     }
     return render(request, 'main/change_dish.html', context)
+
+
+@sync_to_async
+def get_dishes_id(pk):
+    dish = Dishes.objects.get(id=pk)
+    return dish
 
 
 def delete(request, pk):
@@ -115,6 +134,7 @@ def popup(request):
     return render(request, 'main/popup_window.html')
 
 
+@login_required(login_url='login_page')
 def menu(request):
     dishes = Dishes.objects.order_by('-id')  # получаем все оъекты из класса
     return render(request, 'main/menu_page.html', {'dishes': dishes})

@@ -35,10 +35,10 @@ def create(request):
         form = DishesForm(request.POST)
         if form.is_valid():
             form.save()
-            logger.info("Dishes was created successfully!")
+            logger.info("Блюдо было успешно создано!")
             return redirect('menu_page')
         else:
-            logger.error("The form is filled out incorrectly")
+            logger.error("Форма заполнения была неверной")
             error = 'Форма заполнения была неверной'
 
     form = DishesForm()
@@ -50,7 +50,7 @@ def create(request):
 
 
 def update(request, pk):
-    dish = Dishes.objects.get(id=pk)
+    dish = asyncio.run(get_dishes_id(pk))
     form = DishesForm(instance=dish)
 
     if request.method == 'POST':
@@ -59,10 +59,13 @@ def update(request, pk):
             form.save()
             return redirect('menu_page')
         else:
+            logger.error("Форма заполнения была неверной")
             error = 'Форма была неверной'
 
+
     context = {
-        'form': form
+        'form': form,
+        'error': error
     }
     return render(request, 'main/change_dish.html', context)
 
@@ -74,7 +77,7 @@ def get_dishes_id(pk):
 
 
 def delete(request, pk):
-    dish = Dishes.objects.get(id=pk)
+    dish = asyncio.run(get_dishes_id(pk))
     if request.method == 'POST':
         dish.delete()
         return redirect('menu_page')
@@ -93,6 +96,7 @@ def register(request):
             form = CreateUserForm(request.POST)
             if form.is_valid():
                 form.save()
+                logger.info("Регистрация прошла успешно!")
             return redirect('popup_window')
         else:
             form = CreateUserForm()
@@ -117,8 +121,10 @@ def loginpage(request):
         if user is not None:
             """с помощью метода login и выполняется вход """
             login(request, user)
+            logger.info("Вход был успешно выполнен!")
             return redirect('home')
         else:
+            logger.error("Пароль или имя пользователя был введен неправильно!")
             messages.info(request, 'Пароль или имя пользователя был введён неправильно!')
 
      contex = {}
@@ -136,5 +142,12 @@ def popup(request):
 
 @login_required(login_url='login_page')
 def menu(request):
-    dishes = Dishes.objects.order_by('-id')  # получаем все оъекты из класса
+    # получаем все объекты из класса
+    dishes = asyncio.run(get_obj_order_by())
     return render(request, 'main/menu_page.html', {'dishes': dishes})
+
+
+@sync_to_async
+def get_obj_order_by():
+    dishes = Dishes.objects.order_by('-id')
+    return dishes

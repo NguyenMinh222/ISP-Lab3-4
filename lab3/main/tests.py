@@ -16,15 +16,6 @@ class TestAuthentification(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-'''class TestCRUD(TestCase):
-    def setUp(self):
-        Dishes.objects.create(nameofdishes='Ngd', description='qwer', howTOcook='aiff')
-        Categories.objects.create(category='Холодное', category_id=2)
-
-    def test_create_dishes(self):
-        form_data = {'nameofdishes': "Ngd", 'description': "qwer", 'howTOcook': "rehrf", 'category_id': 2 }
-        response = self.client.post("/Add_a_dish", data=form_data)
-        self.assertEqual(response.status_code, 200)'''
 class DishesCreateTestCase(TestCase):
     def setUp(self) -> None:
         user = User.objects.create(username='Nina')

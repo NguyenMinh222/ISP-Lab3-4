@@ -50,7 +50,7 @@ def create(request):
 
 
 def update(request, pk):
-    dish = asyncio.run(get_dishes_id(pk))
+    dish = asyncio.run(get_dishes_id(pk))св
     form = DishesForm(instance=dish)
 
     if request.method == 'POST':
@@ -64,8 +64,7 @@ def update(request, pk):
 
 
     context = {
-        'form': form,
-        'error': error
+        'form': form
     }
     return render(request, 'main/change_dish.html', context)
 
@@ -78,6 +77,7 @@ def get_dishes_id(pk):
 
 def delete(request, pk):
     dish = asyncio.run(get_dishes_id(pk))
+
     if request.method == 'POST':
         dish.delete()
         return redirect('menu_page')
